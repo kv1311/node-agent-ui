@@ -82,7 +82,6 @@ export function ArtHeader({ onKnowMore, onArtworkLoad, greeting }: ArtHeaderProp
           src={imageUrl}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
-          crossOrigin="anonymous"
           onLoad={() => setImageLoaded(true)}
           onError={() => setError(true)}
           style={{

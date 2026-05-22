@@ -104,7 +104,6 @@ export function ArtWidget({ onKnowMore, onArtworkLoad }: ArtWidgetProps) {
         src={imageUrl}
         alt={artwork?.title || 'Artwork'}
         className="w-full h-full object-cover"
-        crossOrigin="anonymous"
       />
       <div 
         className="absolute inset-0"
