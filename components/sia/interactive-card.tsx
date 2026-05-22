@@ -223,7 +223,10 @@ export function InteractiveCard({ type, label, onError, isExpanded = false }: In
     try {
       const response = await fetch(`${API_URL}/api/${type}/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+       headers: {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true'
+},
         body: JSON.stringify({ [fieldName]: !currentState }),
       })
       if (!response.ok) throw new Error('Failed to update')
@@ -246,7 +249,10 @@ export function InteractiveCard({ type, label, onError, isExpanded = false }: In
     try {
       const response = await fetch(`${API_URL}/api/${type}/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+       headers: {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true'
+},
         body: JSON.stringify({ title: newTitle }),
       })
       if (!response.ok) throw new Error('Failed to update')
@@ -275,7 +281,10 @@ export function InteractiveCard({ type, label, onError, isExpanded = false }: In
     try {
       const response = await fetch(`${API_URL}/api/${type}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+       headers: {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true'
+},
         body: JSON.stringify(body),
       })
       if (!response.ok) throw new Error('Failed to add')

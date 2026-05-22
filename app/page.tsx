@@ -71,7 +71,10 @@ export default function HomePage() {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+       headers: {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true'
+},
         body: JSON.stringify({ message }),
       })
       if (!response.ok) throw new Error('Failed to send message')
