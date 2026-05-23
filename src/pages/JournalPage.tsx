@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Trash2 } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { fetchJournal, fetchJournalEntry, deleteJournalEntry } from '../lib/api'
+import { fetchJournal, deleteJournalEntry } from '../lib/api'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import type { JournalEntry } from '../types'
 

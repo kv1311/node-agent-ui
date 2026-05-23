@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Maximize2, X, Info } from 'lucide-react'
@@ -8,13 +6,11 @@ import { fetchRandomArt } from '../lib/api'
 import type { ArtWork } from '../types'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useApp } from '../context/AppContext'
-import { sendChat } from '../lib/api'
 
 export function ArtHeader() {
   const [art, setArt] = useState<ArtWork | null>(null)
   const [hovered, setHovered] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
-  const [imgError, setImgError] = useState(false)
   const reduced = useReducedMotion()
   const { sendMessage } = useApp()
 
@@ -30,7 +26,6 @@ export function ArtHeader() {
 
   return (
     <>
-      {/* Art header zone */}
       <div
         className="relative w-full overflow-hidden"
         style={{ height: '220px' }}
@@ -38,7 +33,7 @@ export function ArtHeader() {
         onMouseLeave={() => setHovered(false)}
       >
         {/* Background image */}
-        {art && !imgError ? (
+        {art?.primaryImage ? (
           <motion.div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${art.primaryImage})` }}
@@ -53,13 +48,11 @@ export function ArtHeader() {
           <div className="absolute inset-0 bg-[#0d1a10]" />
         )}
 
-        {/* Bottom gradient — always */}
+        {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#080f09] via-[#080f0966] to-transparent" />
-
-        {/* Top gradient for header readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#080f09aa] to-transparent h-16" />
 
-        {/* Top bar — agent name + status */}
+        {/* Top bar */}
         <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 h-14 z-10">
           <span
             className="text-[#c9b99a] italic"
@@ -82,7 +75,7 @@ export function ArtHeader() {
           </div>
         </div>
 
-        {/* Bottom overlay — artwork info + controls */}
+        {/* Bottom artwork info */}
         {art && (
           <motion.div
             className="absolute bottom-0 left-0 right-0 px-5 pb-4 flex items-end justify-between z-10"
@@ -99,10 +92,7 @@ export function ArtHeader() {
               {art.artistDisplayName && (
                 <p
                   className="text-[#6b8f72] truncate"
-                  style={{
-                    fontFamily: 'Space Grotesk, sans-serif',
-                    fontSize: '11px',
-                  }}
+                  style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '11px' }}
                 >
                   {art.artistDisplayName}
                   {art.objectDate ? ` · ${art.objectDate}` : ''}
@@ -111,9 +101,8 @@ export function ArtHeader() {
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              {/* Know More */}
               <motion.button
-                onClick={handleKnowMore}
+                onClick={() => void handleKnowMore()}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#c9b99a33] text-[#c9b99a] backdrop-blur-md bg-white/5 hover:bg-white/10 transition-colors focus-visible:ring-2 focus-visible:ring-[#c9b99a] focus-visible:ring-offset-1"
                 style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '11px' }}
                 whileHover={reduced ? {} : { scale: 1.02 }}
@@ -124,7 +113,6 @@ export function ArtHeader() {
                 Know More
               </motion.button>
 
-              {/* Fullscreen */}
               <motion.button
                 onClick={() => setFullscreen(true)}
                 className="p-1.5 rounded-sm border border-[#c9b99a33] text-[#6b8f72] backdrop-blur-md bg-white/5 hover:bg-white/10 transition-colors focus-visible:ring-2 focus-visible:ring-[#c9b99a]"
@@ -160,7 +148,11 @@ export function ArtHeader() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={reduced ? { duration: 0 } : { duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  transition={
+                    reduced
+                      ? { duration: 0 }
+                      : { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+                  }
                 >
                   <Dialog.Title className="sr-only">
                     {art?.title ?? 'Artwork'}
@@ -190,24 +182,20 @@ export function ArtHeader() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={
-                          reduced ? { duration: 0 } : { delay: 0.2, duration: 0.4 }
+                          reduced
+                            ? { duration: 0 }
+                            : { delay: 0.2, duration: 0.4 }
                         }
                       >
                         <p
                           className="text-[#c9b99a] italic"
-                          style={{
-                            fontFamily: 'EB Garamond, serif',
-                            fontSize: '22px',
-                          }}
+                          style={{ fontFamily: 'EB Garamond, serif', fontSize: '22px' }}
                         >
                           {art.title}
                         </p>
                         <p
                           className="text-[#6b8f72] mt-1"
-                          style={{
-                            fontFamily: 'Space Grotesk, sans-serif',
-                            fontSize: '13px',
-                          }}
+                          style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '13px' }}
                         >
                           {[art.artistDisplayName, art.objectDate, art.culture]
                             .filter(Boolean)

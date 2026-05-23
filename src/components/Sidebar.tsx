@@ -9,6 +9,7 @@ import {
   Settings,
   Wifi,
   WifiOff,
+  type LucideIcon,
 } from 'lucide-react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { useApp } from '../context/AppContext'
@@ -18,17 +19,17 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 interface NavItem {
   id: NavPage
   label: string
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>
+  icon: LucideIcon
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'home', label: 'Archive', icon: Archive },
-  { id: 'finance', label: 'Ledger', icon: TrendingUp },
-  { id: 'journal', label: 'Chronicle', icon: BookOpen },
-  { id: 'tools', label: 'Tools', icon: Wrench },
-  { id: 'logs', label: 'Terminal', icon: Terminal },
-  { id: 'admin', label: 'Admin', icon: Shield },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'home',     label: 'Archive',   icon: Archive },
+  { id: 'finance',  label: 'Ledger',    icon: TrendingUp },
+  { id: 'journal',  label: 'Chronicle', icon: BookOpen },
+  { id: 'tools',    label: 'Tools',     icon: Wrench },
+  { id: 'logs',     label: 'Terminal',  icon: Terminal },
+  { id: 'admin',    label: 'Admin',     icon: Shield },
+  { id: 'settings', label: 'Settings',  icon: Settings },
 ]
 
 export function Sidebar() {
@@ -88,7 +89,9 @@ export function Sidebar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={reduced ? { duration: 0 } : { delay: 0.1, duration: 0.2 }}
+                transition={
+                  reduced ? { duration: 0 } : { delay: 0.1, duration: 0.2 }
+                }
               >
                 {serverOnline ? (
                   <Wifi size={11} className="text-emerald-400" />
@@ -144,7 +147,11 @@ export function Sidebar() {
                   />
                 )}
 
-                <Icon size={16} strokeWidth={1.5} className="shrink-0 ml-0.5" />
+                <Icon
+                  size={16}
+                  strokeWidth={1.5}
+                  className="shrink-0 ml-0.5"
+                />
 
                 <AnimatePresence>
                   {sidebarExpanded && (
@@ -173,9 +180,8 @@ export function Sidebar() {
               </motion.button>
             )
 
-            // Show tooltip only when collapsed
             return sidebarExpanded ? (
-              button
+              <div key={item.id}>{button}</div>
             ) : (
               <Tooltip.Root key={item.id}>
                 <Tooltip.Trigger asChild>{button}</Tooltip.Trigger>

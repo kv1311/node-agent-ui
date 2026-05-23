@@ -2,10 +2,15 @@ import { motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { ArtHeader } from '../components/ArtHeader'
-import { CheckSquare, Bell, Receipt, Calendar, Film, Brain } from 'lucide-react'
-import type { Task, Reminder, Bill, Event, WatchlistItem, MemoryNode } from '../types'
-
-// ── Skeleton ─────────────────────────────────────────────────────────────────
+import {
+  CheckSquare,
+  Bell,
+  Receipt,
+  Calendar,
+  Film,
+  Brain,
+  type LucideIcon,
+} from 'lucide-react'
 
 function Skeleton({ className = '' }: { className?: string }) {
   return (
@@ -16,11 +21,9 @@ function Skeleton({ className = '' }: { className?: string }) {
   )
 }
 
-// ── Card shell ────────────────────────────────────────────────────────────────
-
 interface CardProps {
   label: string
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>
+  icon: LucideIcon
   count?: number
   children: React.ReactNode
   reduced: boolean
@@ -34,7 +37,9 @@ function Card({ label, icon: Icon, count, children, reduced, index }: CardProps)
       initial={reduced ? {} : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={
-        reduced ? { duration: 0 } : { delay: index * 0.06, duration: 0.3, ease: 'easeOut' }
+        reduced
+          ? { duration: 0 }
+          : { delay: index * 0.06, duration: 0.3, ease: 'easeOut' }
       }
     >
       <div className="flex items-center justify-between">
@@ -65,8 +70,6 @@ function Card({ label, icon: Icon, count, children, reduced, index }: CardProps)
   )
 }
 
-// ── Empty state ───────────────────────────────────────────────────────────────
-
 function Empty({ text }: { text: string }) {
   return (
     <p
@@ -77,8 +80,6 @@ function Empty({ text }: { text: string }) {
     </p>
   )
 }
-
-// ── Row item ──────────────────────────────────────────────────────────────────
 
 function Row({
   title,
@@ -142,8 +143,6 @@ function Row({
   )
 }
 
-// ── HomePage ──────────────────────────────────────────────────────────────────
-
 export function HomePage() {
   const { data, dataLoading } = useApp()
   const reduced = useReducedMotion()
@@ -184,8 +183,7 @@ export function HomePage() {
             animate={{ opacity: 1 }}
             transition={reduced ? { duration: 0 } : { delay: 0.2, duration: 0.3 }}
           >
-            {pendingTasks.length} task{pendingTasks.length !== 1 ? 's' : ''}{' '}
-            pending
+            {pendingTasks.length} task{pendingTasks.length !== 1 ? 's' : ''} pending
             {pendingBills.length > 0
               ? `. ${pendingBills.length} bill${pendingBills.length !== 1 ? 's' : ''} unpaid.`
               : '.'}
@@ -193,16 +191,9 @@ export function HomePage() {
         )}
       </div>
 
-      {/* Cards grid */}
+      {/* Cards */}
       <div className="flex-1 px-4 py-4 pb-20 grid grid-cols-1 gap-3">
-        {/* Tasks */}
-        <Card
-          label="Tasks"
-          icon={CheckSquare}
-          count={pendingTasks.length}
-          reduced={reduced}
-          index={0}
-        >
+        <Card label="Tasks" icon={CheckSquare} count={pendingTasks.length} reduced={reduced} index={0}>
           {dataLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-3/4" />
@@ -214,26 +205,13 @@ export function HomePage() {
           ) : (
             <div>
               {pendingTasks.slice(0, 4).map((t) => (
-                <Row
-                  key={t.id}
-                  title={t.title}
-                  meta={t.due_date || undefined}
-                  done={!!t.done}
-                  onToggle={() => {}}
-                />
+                <Row key={t.id} title={t.title} meta={t.due_date || undefined} done={!!t.done} onToggle={() => {}} />
               ))}
             </div>
           )}
         </Card>
 
-        {/* Reminders */}
-        <Card
-          label="Reminders"
-          icon={Bell}
-          count={pendingReminders.length}
-          reduced={reduced}
-          index={1}
-        >
+        <Card label="Reminders" icon={Bell} count={pendingReminders.length} reduced={reduced} index={1}>
           {dataLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-2/3" />
@@ -244,26 +222,13 @@ export function HomePage() {
           ) : (
             <div>
               {pendingReminders.slice(0, 3).map((r) => (
-                <Row
-                  key={r.id}
-                  title={r.title}
-                  meta={r.remind_at || undefined}
-                  done={!!r.done}
-                  onToggle={() => {}}
-                />
+                <Row key={r.id} title={r.title} meta={r.remind_at || undefined} done={!!r.done} onToggle={() => {}} />
               ))}
             </div>
           )}
         </Card>
 
-        {/* Bills */}
-        <Card
-          label="Bills"
-          icon={Receipt}
-          count={pendingBills.length}
-          reduced={reduced}
-          index={2}
-        >
+        <Card label="Bills" icon={Receipt} count={pendingBills.length} reduced={reduced} index={2}>
           {dataLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-1/2" />
@@ -285,14 +250,7 @@ export function HomePage() {
           )}
         </Card>
 
-        {/* Events */}
-        <Card
-          label="Events"
-          icon={Calendar}
-          count={upcomingEvents.length}
-          reduced={reduced}
-          index={3}
-        >
+        <Card label="Events" icon={Calendar} count={upcomingEvents.length} reduced={reduced} index={3}>
           {dataLoading ? (
             <Skeleton className="h-4 w-2/3" />
           ) : upcomingEvents.length === 0 ? (
@@ -306,14 +264,7 @@ export function HomePage() {
           )}
         </Card>
 
-        {/* Watchlist */}
-        <Card
-          label="Watchlist"
-          icon={Film}
-          count={unwatched.length}
-          reduced={reduced}
-          index={4}
-        >
+        <Card label="Watchlist" icon={Film} count={unwatched.length} reduced={reduced} index={4}>
           {dataLoading ? (
             <Skeleton className="h-4 w-1/2" />
           ) : unwatched.length === 0 ? (
@@ -332,14 +283,7 @@ export function HomePage() {
           )}
         </Card>
 
-        {/* Memory */}
-        <Card
-          label="Memory"
-          icon={Brain}
-          count={memories.length}
-          reduced={reduced}
-          index={5}
-        >
+        <Card label="Memory" icon={Brain} count={memories.length} reduced={reduced} index={5}>
           {dataLoading ? (
             <Skeleton className="h-4 w-3/4" />
           ) : memories.length === 0 ? (
