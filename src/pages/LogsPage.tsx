@@ -7,32 +7,32 @@ import type { LogLine } from '../types'
 
 const LEVEL_COLORS: Record<LogLine['level'], string> = {
   error: '#c97a7a',
-  warn: '#c9b97a',
-  cron: '#9ec4a4',
+  warn:  '#c9b97a',
+  cron:  '#9ec4a4',
   agent: '#7ab4c9',
-  tool: '#b97ac9',
-  info: '#6b8f72',
+  tool:  '#b97ac9',
+  info:  '#6b8f72',
 }
 
 const LEVEL_BG: Record<LogLine['level'], string> = {
   error: '#1a0a0a',
-  warn: '#1a1a0a',
-  cron: '#0a1a0d',
+  warn:  '#1a1a0a',
+  cron:  '#0a1a0d',
   agent: '#0a121a',
-  tool: '#120a1a',
-  info: '#080f09',
+  tool:  '#120a1a',
+  info:  '#080f09',
 }
 
 const ALL_LEVELS: LogLine['level'][] = ['info', 'agent', 'tool', 'cron', 'warn', 'error']
 
 export function LogsPage() {
-  const [logs, setLogs] = useState<LogLine[]>([])
+  const [logs, setLogs]       = useState<LogLine[]>([])
   const [loading, setLoading] = useState(true)
-  const [paused, setPaused] = useState(false)
-  const [filter, setFilter] = useState<LogLine['level'] | 'all'>('all')
-  const reduced = useReducedMotion()
-  const endRef = useRef<HTMLDivElement>(null)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [paused, setPaused]   = useState(false)
+  const [filter, setFilter]   = useState<LogLine['level'] | 'all'>('all')
+  const reduced               = useReducedMotion()
+  const endRef                = useRef<HTMLDivElement>(null)
+  const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const loadLogs = useCallback(async () => {
     if (paused) return
@@ -54,19 +54,22 @@ export function LogsPage() {
     }
   }, [loadLogs])
 
+  // Auto-scroll to bottom only when not paused
   useEffect(() => {
     if (!paused) {
       endRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [logs, paused])
 
-  const filtered =
-    filter === 'all' ? logs : logs.filter((l) => l.level === filter)
+  const filtered = filter === 'all' ? logs : logs.filter((l) => l.level === filter)
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="px-5 py-5 border-b border-[#1a2e1d] flex items-center justify-between gap-3">
+    // KEY FIX: h-full not min-h-screen — constrains to parent viewport height
+    // Parent in App.tsx is overflow-y-auto flex-1, so this fills exactly the screen
+    <div className="h-full flex flex-col overflow-hidden">
+
+      {/* Header — never scrolls away */}
+      <div className="px-5 py-4 border-b border-[#1a2e1d] flex items-center justify-between gap-3 shrink-0">
         <h1
           className="text-[#c9b99a] italic"
           style={{ fontFamily: 'EB Garamond, serif', fontSize: '26px' }}
@@ -82,11 +85,7 @@ export function LogsPage() {
             whileTap={reduced ? {} : { scale: 0.95 }}
             aria-label={paused ? 'Resume log feed' : 'Pause log feed'}
           >
-            {paused ? (
-              <Play size={12} />
-            ) : (
-              <Pause size={12} />
-            )}
+            {paused ? <Play size={12} /> : <Pause size={12} />}
             {paused ? 'Resume' : 'Pause'}
           </motion.button>
 
@@ -101,9 +100,9 @@ export function LogsPage() {
         </div>
       </div>
 
-      {/* Level filters */}
+      {/* Level filters — never scrolls away */}
       <div
-        className="flex gap-2 px-5 py-3 border-b border-[#1a2e1d] overflow-x-auto"
+        className="flex gap-2 px-5 py-3 border-b border-[#1a2e1d] overflow-x-auto shrink-0"
         role="group"
         aria-label="Filter by log level"
       >
@@ -130,10 +129,7 @@ export function LogsPage() {
                 ? 'border-current bg-[#1a2e1d]'
                 : 'border-[#1a2e1d] hover:border-current',
             ].join(' ')}
-            style={{
-              fontFamily: 'Courier Prime, monospace',
-              color: LEVEL_COLORS[level],
-            }}
+            style={{ fontFamily: 'Courier Prime, monospace', color: LEVEL_COLORS[level] }}
             aria-pressed={filter === level}
           >
             {level}
@@ -141,9 +137,9 @@ export function LogsPage() {
         ))}
       </div>
 
-      {/* Log lines */}
+      {/* Log lines — ONLY this section scrolls */}
       <div
-        className="flex-1 overflow-y-auto px-5 py-3 pb-24 space-y-0.5"
+        className="flex-1 overflow-y-auto px-5 py-3 space-y-0.5 min-h-0"
         aria-live="polite"
         aria-label="Application logs"
       >
@@ -153,7 +149,7 @@ export function LogsPage() {
               <div
                 key={i}
                 className="h-4 rounded bg-[#1a2e1d] animate-pulse"
-                style={{ width: `${60 + Math.random() * 35}%` }}
+                style={{ width: `${60 + (i * 7) % 35}%` }}
               />
             ))}
           </div>
@@ -172,9 +168,7 @@ export function LogsPage() {
               style={{ background: LEVEL_BG[log.level] }}
               initial={reduced ? {} : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={
-                reduced ? { duration: 0 } : { duration: 0.15 }
-              }
+              transition={reduced ? { duration: 0 } : { duration: 0.15 }}
             >
               <p
                 className="leading-relaxed break-all"
@@ -192,14 +186,13 @@ export function LogsPage() {
         <div ref={endRef} />
       </div>
 
-      {/* Status bar */}
-      <div className="fixed bottom-16 left-14 right-0 px-5 py-1.5 border-t border-[#1a2e1d] bg-[#080f09]/90 backdrop-blur-sm flex items-center justify-between">
+      {/* Status bar — pinned to bottom of this component, not fixed */}
+      <div className="shrink-0 px-5 py-2 border-t border-[#1a2e1d] bg-[#080f09] flex items-center justify-between">
         <span
           className="text-[#6b8f72]"
           style={{ fontFamily: 'Courier Prime, monospace', fontSize: '10px' }}
         >
-          {filtered.length} lines · refreshing every 5s
-          {paused ? ' · paused' : ''}
+          {filtered.length} lines · refreshing every 5s{paused ? ' · paused' : ''}
         </span>
         <motion.div
           className="w-1.5 h-1.5 rounded-full"
