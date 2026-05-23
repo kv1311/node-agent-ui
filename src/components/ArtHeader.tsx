@@ -12,7 +12,7 @@ export function ArtHeader() {
   const [hovered, setHovered] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
   const reduced = useReducedMotion()
-  const { sendMessage } = useApp()
+  const { sendMessage, setChatOpen } = useApp()
 
   useEffect(() => {
     fetchRandomArt().then((a) => setArt(a))
@@ -20,8 +20,10 @@ export function ArtHeader() {
 
   async function handleKnowMore() {
     if (!art) return
+    
     const msg = `Tell me about this artwork: "${art.title}" by ${art.artistDisplayName || 'Unknown'}, dated ${art.objectDate || 'unknown date'}, ${art.culture || ''} ${art.period || ''}.`
     await sendMessage(msg)
+    setChatOpen(true)
   }
 
   return (

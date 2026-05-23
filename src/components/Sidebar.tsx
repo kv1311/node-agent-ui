@@ -23,9 +23,9 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'home',     label: 'Archive',   icon: Archive },
+  { id: 'home',     label: 'Dashboard',   icon: Archive },
   { id: 'finance',  label: 'Ledger',    icon: TrendingUp },
-  { id: 'journal',  label: 'Chronicle', icon: BookOpen },
+  { id: 'journal',  label: 'Journal', icon: BookOpen },
   { id: 'tools',    label: 'Tools',     icon: Wrench },
   { id: 'logs',     label: 'Terminal',  icon: Terminal },
   { id: 'admin',    label: 'Admin',     icon: Shield },

@@ -29,8 +29,8 @@ function ChatMessage({
         </div>
       ) : (
         <div
-          className="max-w-[85%] text-[#ede8df] leading-relaxed italic"
-          style={{ fontFamily: 'EB Garamond, serif', fontSize: '16px' }}
+          className="max-w-[85%] text-[#ede8df] leading-relaxed"
+          style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '14px' }}
         >
           {content}
         </div>
@@ -118,12 +118,10 @@ export function ChatBar() {
               aria-label="Chat messages"
             >
               {messages.length === 0 ? (
-                <p
-                  className="text-[#6b8f72] italic text-center mt-8"
-                  style={{ fontFamily: 'EB Garamond, serif', fontSize: '16px' }}
-                >
-                  Ask Sia anything.
-                </p>
+              <p className="text-[#6b8f72] text-center mt-8"
+                style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '14px' }}>
+                Ask Sia anything.
+              </p>
               ) : (
                 messages.map((msg) => (
                   <ChatMessage
