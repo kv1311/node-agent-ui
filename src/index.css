@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg:       #080f09;
+  --color-surface:  #0d1a10;
+  --color-border:   #1a2e1d;
+  --color-text:     #ede8df;
+  --color-accent:   #c9b99a;
+  --color-muted:    #6b8f72;
+  --color-active:   #2d5a34;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Space Grotesk', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-active);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-active);
+  color: var(--color-accent);
+}
+
+/* Focus visible — global ring style */
+:focus-visible {
+  outline: none;
+}
+
+/* Smooth scrolling */
+* {
+  scroll-behavior: smooth;
+}
