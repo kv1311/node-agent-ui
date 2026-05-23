@@ -6,7 +6,7 @@ import type {
   ArtWork,
 } from '../types'
 
-export const API_BASE = import.meta.env.NEXT_PUBLIC_API_URL ?? ''
+export const API_BASE = import.meta.env.VITE_API_BASE ?? ''
 
 const BASE_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',

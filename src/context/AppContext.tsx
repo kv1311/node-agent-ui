@@ -73,7 +73,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Health ping every 30s
     healthInterval.current = setInterval(async () => {
       try {
-        await fetch(`${import.meta.env.NEXT_PUBLIC_API_URL ?? ''}/api/health`, {
+        await fetch(`${import.meta.env.VITE_API_BASE ?? ''}/api/health`, {
           headers: { 'ngrok-skip-browser-warning': 'true' },
         })
         setServerOnline(true)
