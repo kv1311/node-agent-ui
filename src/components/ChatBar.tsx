@@ -40,18 +40,42 @@ function ChatMessage({
 }
 
 export function ChatBar() {
-  const { messages, chatLoading, sendMessage, chatOpen, setChatOpen } = useApp()
+  const {
+    messages,
+    chatLoading,
+    sendMessage,
+    chatOpen,
+    setChatOpen,
+    inputValue,       // NEW: from context
+    setInputValue,    // NEW
+    // prefillInput,     // NEW (optional, if needed for clearing)
+  } = useApp()
   const [input, setInput] = useState('')
   const reduced = useReducedMotion()
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Sync context input value to local state when it changes (e.g., from ToolsPage)
+  useEffect(() => {
+    if (inputValue) {
+      setInput(inputValue)
+      // Also open chat if not already open
+      if (!chatOpen) {
+        setChatOpen(true)
+      }
+      // Focus the input once the value is set
+      inputRef.current?.focus()
+    }
+  }, [inputValue]) // run only when inputValue changes
+
+  // Focus input when chat opens (existing)
   useEffect(() => {
     if (chatOpen && inputRef.current) {
       inputRef.current.focus()
     }
   }, [chatOpen])
 
+  // Scroll to bottom when messages change
   useEffect(() => {
     if (chatOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -62,6 +86,7 @@ export function ChatBar() {
     const text = input.trim()
     if (!text || chatLoading) return
     setInput('')
+    setInputValue('')   // NEW: clear context input after sending
     await sendMessage(text)
   }
 
@@ -71,6 +96,13 @@ export function ChatBar() {
       void handleSubmit()
     }
     if (e.key === 'Escape') setChatOpen(false)
+  }
+
+  // Local typing: update both local and context state
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newValue = e.target.value
+    setInput(newValue)
+    setInputValue(newValue)
   }
 
   return (
@@ -118,10 +150,12 @@ export function ChatBar() {
               aria-label="Chat messages"
             >
               {messages.length === 0 ? (
-              <p className="text-[#6b8f72] text-center mt-8"
-                style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '14px' }}>
-                Ask Sia anything.
-              </p>
+                <p
+                  className="text-[#6b8f72] text-center mt-8"
+                  style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '14px' }}
+                >
+                  Ask Sia anything.
+                </p>
               ) : (
                 messages.map((msg) => (
                   <ChatMessage
@@ -170,7 +204,7 @@ export function ChatBar() {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onFocus={() => setChatOpen(true)}
             placeholder="Query the archive..."
