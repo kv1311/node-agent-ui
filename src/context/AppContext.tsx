@@ -32,6 +32,11 @@ export interface AppContextValue {
   chatOpen: boolean
   setChatOpen: (v: boolean) => void
 
+  // Chat input prefill (NEW)
+  inputValue: string
+  setInputValue: (v: string) => void
+  prefillInput: (value: string) => void
+
   // Server health
   serverOnline: boolean
 }
@@ -51,6 +56,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [chatOpen, setChatOpen] = useState(false)
   const [serverOnline, setServerOnline] = useState(true)
   const healthInterval = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // NEW: shared input state for chat
+  const [inputValue, setInputValue] = useState('')
 
   const refreshData = useCallback(async () => {
     try {
@@ -124,6 +132,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [refreshData],
   )
 
+  // NEW: convenience function that prefills and optionally opens chat
+  const prefillInput = useCallback(
+    (value: string) => {
+      setInputValue(value)
+      // The ToolsPage will also call setChatOpen(true) to open the panel,
+      // but you could also do it here if you prefer.
+      // setChatOpen(true)
+    },
+    [],
+  )
+
   return (
     <AppContext.Provider
       value={{
@@ -140,6 +159,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         sendMessage,
         chatOpen,
         setChatOpen,
+        inputValue,      // NEW
+        setInputValue,   // NEW
+        prefillInput,    // NEW
         serverOnline,
       }}
     >

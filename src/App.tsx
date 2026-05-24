@@ -4,6 +4,7 @@ import { AppProvider, useApp } from './context/AppContext'
 import { Sidebar } from './components/Sidebar'
 import { ChatBar } from './components/ChatBar'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { ToolsPage } from './pages/ToolsPage'
 
 // Lazy load pages
 const HomePage    = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
@@ -40,22 +41,7 @@ function PageContent() {
           {activePage === 'journal' && <JournalPage />}
           {activePage === 'logs'    && <LogsPage />}
           {activePage === 'admin'   && <AdminPage />}
-          {activePage === 'tools'   && (
-            <div className="px-5 py-8">
-              <p
-                className="text-[#c9b99a] italic"
-                style={{ fontFamily: 'EB Garamond, serif', fontSize: '22px' }}
-              >
-                Tools
-              </p>
-              <p
-                className="text-[#6b8f72] mt-3"
-                style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '14px' }}
-              >
-                Use the chat bar below to manage tasks, reminders, bills, and watchlist.
-              </p>
-            </div>
-          )}
+          {activePage === 'tools'   && <ToolsPage />}
           {activePage === 'settings' && (
             <div className="px-5 py-8">
               <p
